@@ -1,0 +1,20 @@
+.column_of_row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.each_row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 50%;
+}
+.space_width{
+    width: 10%;
+}
+.label_text{
+    width: 40%;
+}
+.input_box{
+    width: 55%;
+}
