@@ -2,6 +2,7 @@ import { LightningElement,track,wire} from 'lwc';
 import get_price_book_name from '@salesforce/apex/count_price.get_price_book';
 import get_discount_table_name from '@salesforce/apex/count_price.get_discount_table';
 import add_sys_pkey_tail from '@salesforce/apex/count_price.add_sys_pkey_tail';
+import insert_new_price_book from '@salesforce/apex/count_price.insert_new_price_book';
 export default class Count_price_v1 extends LightningElement {
     @track modal_keyin = false;
     @track get_price_book = [];
@@ -16,6 +17,7 @@ export default class Count_price_v1 extends LightningElement {
     @track end_date = "";
     @track exchange_rate = "";
     @track discount_rate = "";
+    @track sys_pkey = "";
     @wire (get_price_book_name) 
     //get the picklist data
     price_book_name({error,data}){
@@ -83,7 +85,7 @@ export default class Count_price_v1 extends LightningElement {
         this.region_value = event.detail.value;
     } 
     handler_select_brand(event){
-        this.brand_value - event.detail.value;
+        this.brand_value = event.detail.value;
     }
     handler_select_currency(event){
         this.currency_value = event.detail.value;
@@ -106,12 +108,22 @@ export default class Count_price_v1 extends LightningElement {
         this.end_date = this.template.querySelector(".End_Date").value;
         this.exchange_rate = this.template.querySelector(".Exchange_Rate");
         this.discount_rate = this.template.querySelector(".Discount_Rate");
+        console.log(this.new_price_book);
         add_sys_pkey_tail({price_book:this.price_book_value})
         .then(result => {
-            console.log(result);
+            this.sys_pkey = result;
+            insert_new_price_book({sys_pkey:this.sys_pkey,new_price_book:this.new_price_book,tsc_region:this.region_value,start_date:this.start_date,end_date:this.end_date,set_currency:this.currency_value,brand:this.brand_value})
+            .then(result =>{
+                console.log(result);
+            })
+            .catch(error =>{
+                console.log(error);
+            })
+            this.modal_keyin = false;
         })
         .catch(error => {
             this.error = error;
         });
+        
     }
 }
