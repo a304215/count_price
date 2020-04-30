@@ -22,7 +22,7 @@
                                 label="test"
                                 name="Name"
                                 variant = "label-hidden"
-                                placeholder="please choose price book"
+                                value = {price_book_layout}
                                 options={get_price_book}
                                 onchange={handler_select_pricebook}
                                 class="input_box"
@@ -30,7 +30,24 @@
                         </div>
                         <div class="each_row">
                             <p class="label_text">*new Price Book</p>
-                            <lightning-input type="text" variant = "label-hidden" class="input_box new_price_book" id = "new_price_book" value={price_book_value}></lightning-input>
+                            <lightning-input type="text"   readonly = "" variant = "label-hidden" class="input_box new_price_book" id = "new_price_book" value={price_book_value}></lightning-input>
+                        </div>
+                    </div>
+                    <div class="sids-m-around_medium column_of_row">
+                        <div class="each_row">
+                            <p class="label_text">*New pricebook Name mix number</p>
+                            <lightning-combobox
+                                variant = "label-hidden"
+                                options = {get_mix_number}
+                                onchange = {handler_mix_number}
+                                class = "input_box"
+                            ></lightning-combobox>
+                        </div>
+                        <div class="each_row">
+                            <lightning-combobox
+                                variant = "label-hidden"
+                                options = {}
+                            ></lightning-combobox>
                         </div>
                     </div>
                     <div class="slds-m-around_medium column_of_row">
@@ -51,6 +68,7 @@
                             <lightning-combobox
                                 label="test"
                                 name="Name"
+                                value={tsc_region_layout}
                                 variant = "label-hidden"
                                 placeholder="please choose price book"
                                 class="input_box"
@@ -62,14 +80,14 @@
                     <div class="slds-m-around_medium column_of_row">
                         <div class="each_row">
                             <p class="label_text">Start Date</p>
-                            <lightning-input type="date" name="input1" variant = "label-hidden" class="input_box Start_Date"></lightning-input>
+                            <lightning-input type="date" name="input1" value = {start_date_layout} variant = "label-hidden" class="input_box Start_Date"></lightning-input>
                         </div>
                         <div class="each_row">
                             <p class="label_text">Brand</p>
                             <lightning-combobox
                                 label="test"
                                 name="Name"
-                                value="TSCAA"
+                                value={brand_layout}
                                 variant = "label-hidden"
                                 class="input_box"
                                 options={get_brand}
@@ -80,14 +98,14 @@
                     <div class="slds-m-around_medium column_of_row">
                         <div class="each_row">
                             <p class="label_text">End Date</p>
-                            <lightning-input type="date" name="input1" variant = "label-hidden" class="input_box End_Date"></lightning-input>
+                            <lightning-input type="date" name="input1" value = {end_date_layout} variant = "label-hidden" class="input_box End_Date"></lightning-input>
                         </div>
                         <div class="each_row">
                             <p class="label_text">Currency</p>
                             <lightning-combobox
                                 label="test"
                                 name="Name"
-                                value="TSCAA"
+                                value={currency_layout}
                                 variant = "label-hidden"
                                 class="input_box"
                                 options={get_currency}

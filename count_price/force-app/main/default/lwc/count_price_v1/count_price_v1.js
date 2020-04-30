@@ -1,12 +1,22 @@
-import { LightningElement,track,wire} from 'lwc';
+import { LightningElement,track,wire,api} from 'lwc';
 import get_price_book_name from '@salesforce/apex/count_price.get_price_book';
 import get_discount_table_name from '@salesforce/apex/count_price.get_discount_table';
 import add_sys_pkey_tail from '@salesforce/apex/count_price.add_sys_pkey_tail';
 import insert_new_price_book from '@salesforce/apex/count_price.insert_new_price_book';
+import get_clone_book_detail from '@salesforce/apex/count_price.get_clone_book_detail';
 export default class Count_price_v1 extends LightningElement {
+    @api recordId;
     @track modal_keyin = false;
+    @track price_book_layout;
+    @track tsc_region_layout;
+    @track start_date_layout;
+    @track end_date_layout;
+    @track brand_layout;
+    @track currency_layout;
     @track get_price_book = [];
-    @track get_discount_table = []
+    @track get_discount_table = [];
+    @track get_book_detail = [];
+    @track mix_number = "";
     @track price_book_value = "";
     @track discount_table_value = "";
     @track region_value = "";
@@ -44,6 +54,38 @@ export default class Count_price_v1 extends LightningElement {
         }if(error){
             console.log(error);
         }
+    }
+    @wire(get_clone_book_detail,{pricing_maintain_id :'$recordId'})
+    clone_book_detail({error,data}){
+        if(data){
+            for(let i = 0 ; i < data.length;i++){
+                this.get_book_detail[i] = {
+                    Name : data[i].Name,
+                    Brand__c : data[i].Brand__c,
+                    CurrencyIsoCode : data[i].CurrencyIsoCode,
+                    End_Date__c : data[i].End_Date__c,
+                    Start_Date__c : data[i].Start_Date__c,
+                    TSC_Region__c : data[i].TSC_Region__c
+                }
+            }
+            this.price_book_layout = this.get_book_detail[0].Name;
+            this.tsc_region_layout = this.get_book_detail[0].TSC_Region__c;
+            this.start_date_layout = this.get_book_detail[0].Start_Date__c;
+            this.end_date_layout = this.get_book_detail[0].End_Date__c;
+            this.brand_layout = this.get_book_detail[0].Brand__c;
+            this.currency_layout = this.get_book_detail[0].CurrencyIsoCode;
+            this.price_book_value = this.price_book_layout;
+        }
+        if(error){
+            console.log("there is some error in function");
+        }
+    }
+    get get_mix_number(){
+        return [
+            {label:'2',value:'2'},
+            {label:'3',value:'3'},
+            {label:'4',value:'4'},
+        ]
     }
     get get_region(){
         return [
@@ -93,6 +135,9 @@ export default class Count_price_v1 extends LightningElement {
     //this handle is for button click
     handle_start_button(event){
         this.modal_keyin = true;
+    }
+    handler_mix_number(event){
+        this.mix_number = event.detail.value;
     }
     close_page(event){
         this.price_book_value = "";
