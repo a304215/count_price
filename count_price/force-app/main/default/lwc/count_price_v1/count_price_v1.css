@@ -9,6 +9,13 @@
     align-items: center;
     width: 50%;
 }
+.each_row_one{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding-left: 50%;
+}
 .space_width{
     width: 10%;
 }
@@ -17,4 +24,13 @@
 }
 .input_box{
     width: 55%;
+}
+.first_button{
+    width: 100%;
+}
+.be_center{
+    padding-left: 50%;
+}
+.one_row{
+    padding-left: 50%;
 }

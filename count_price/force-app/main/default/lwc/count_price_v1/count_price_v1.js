@@ -7,16 +7,11 @@ import get_clone_book_detail from '@salesforce/apex/count_price.get_clone_book_d
 export default class Count_price_v1 extends LightningElement {
     @api recordId;
     @track modal_keyin = false;
-    @track price_book_layout;
-    @track tsc_region_layout;
-    @track start_date_layout;
-    @track end_date_layout;
-    @track brand_layout;
-    @track currency_layout;
     @track get_price_book = [];
     @track get_discount_table = [];
     @track get_book_detail = [];
-    @track mix_number = "";
+    @track incoterm_value = ""; 
+    @track mix_number = "4";
     @track price_book_value = "";
     @track discount_table_value = "";
     @track region_value = "";
@@ -28,6 +23,10 @@ export default class Count_price_v1 extends LightningElement {
     @track exchange_rate = "";
     @track discount_rate = "";
     @track sys_pkey = "";
+    @track tsc_region_boolean = true;
+    @track brand_boolean = true;
+    @track currency_boolean = true;
+    @track incoterms = true;
     @wire (get_price_book_name) 
     //get the picklist data
     price_book_name({error,data}){
@@ -65,20 +64,29 @@ export default class Count_price_v1 extends LightningElement {
                     CurrencyIsoCode : data[i].CurrencyIsoCode,
                     End_Date__c : data[i].End_Date__c,
                     Start_Date__c : data[i].Start_Date__c,
-                    TSC_Region__c : data[i].TSC_Region__c
+                    TSC_Region__c : data[i].TSC_Region__c,
+                    Incoterms__c : data[i].Incoterms__c,
                 }
             }
-            this.price_book_layout = this.get_book_detail[0].Name;
-            this.tsc_region_layout = this.get_book_detail[0].TSC_Region__c;
-            this.start_date_layout = this.get_book_detail[0].Start_Date__c;
-            this.end_date_layout = this.get_book_detail[0].End_Date__c;
-            this.brand_layout = this.get_book_detail[0].Brand__c;
-            this.currency_layout = this.get_book_detail[0].CurrencyIsoCode;
-            this.price_book_value = this.price_book_layout;
+            this.price_book_value = this.get_book_detail[0].Name;
+            this.region_value = this.get_book_detail[0].TSC_Region__c;
+            this.start_date = this.get_book_detail[0].Start_Date__c;
+            this.end_date = this.get_book_detail[0].End_Date__c;
+            this.brand_value = this.get_book_detail[0].Brand__c;
+            this.currency_value = this.get_book_detail[0].CurrencyIsoCode;
+            this.incoterm_value = this.get_book_detail[0].Incoterms__c;
+            this.new_price_book = this.price_book_value;
         }
         if(error){
             console.log("there is some error in function");
         }
+    }
+    get get_incoterms(){
+        return [
+            {label:'CIP',value:'CIP'},
+            {label:'FCA',value:'FCA'},
+            {label:'FOB',value:"FOB"}
+        ]
     }
     get get_mix_number(){
         return [
@@ -119,18 +127,33 @@ export default class Count_price_v1 extends LightningElement {
     //solve the picklist onchange event
     handler_select_pricebook(event){
         this.price_book_value = event.detail.value;
+        this.new_price_book = this.price_book_value;
     }
     handler_select_discount_table(event){
         this.discount_table_value = event.detail.value;
     }  
     handler_select_region(event){
         this.region_value = event.detail.value;
+        this.make_new_price_book();
+        console.log(this.region_value);
+        console.log(this.new_price_book);
     } 
     handler_select_brand(event){
         this.brand_value = event.detail.value;
+        this.make_new_price_book();
+    }
+    checkbox_tsc_region(event){
+        var checkbox_value = event.target.checked;
+        var tsc_region = "";
+
+        console.log(typeof(event.target.checked));
+        if(checkbox_value == false){
+            this.new_price_book = ""
+        }
     }
     handler_select_currency(event){
         this.currency_value = event.detail.value;
+        this.make_new_price_book();
     }
     //this handle is for button click
     handle_start_button(event){
@@ -138,14 +161,36 @@ export default class Count_price_v1 extends LightningElement {
     }
     handler_mix_number(event){
         this.mix_number = event.detail.value;
+        console.log(this.mix_number);
+        this.make_new_price_book();
     }
-    close_page(event){
+    make_new_price_book(){
+        if(this.mix_number == '2'){
+            this.new_price_book = this.region_value+'-'+this.brand_value+' List Pricebook';
+            console.log(this.new_price_book);
+        }
+        if(this.mix_number == '3'){
+            this.new_price_book = this.region_value+'-'+this.brand_value+'-'+this.currency_value+' List Pricebook';
+            console.log(this.new_price_book);
+        }
+        if(this.mix_number == '4'){
+            this.new_price_book = this.region_value+'-'+this.brand_value+'-'+this.currency_value+'-'+this.incoterm_value+' List Pricebook';
+            console.log(this.new_price_book);
+        }
+    }
+    handler_incoterm(event){
+        this.incoterm_value = event.detail.value;
+        console.log(this.incoterm_value);
+        this.make_new_price_book();
+    }
+    close_page(event){ 
         this.price_book_value = "";
         this.discount_table_value = "";
         this.region_value = "";
         this.brand_value = "";
         this.currency_value = "";
         this.modal_keyin = false;
+        console.log(this.template.querySelector(".new_price_book").value);
     }
     save_page(event){
         this.new_price_book  = this.template.querySelector(".new_price_book").value;
