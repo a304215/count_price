@@ -26,7 +26,7 @@ export default class Count_price_v1 extends LightningElement {
     @track tsc_region_boolean = true;
     @track brand_boolean = true;
     @track currency_boolean = true;
-    @track incoterms = true;
+    @track incoterms_boolean = true;
     @wire (get_price_book_name) 
     //get the picklist data
     price_book_name({error,data}){
@@ -143,13 +143,8 @@ export default class Count_price_v1 extends LightningElement {
         this.make_new_price_book();
     }
     checkbox_tsc_region(event){
-        var checkbox_value = event.target.checked;
-        var tsc_region = "";
-
-        console.log(typeof(event.target.checked));
-        if(checkbox_value == false){
-            this.new_price_book = ""
-        }
+        this.tsc_region_boolean = event.target.checked;
+        this.make_new_price_book();
     }
     handler_select_currency(event){
         this.currency_value = event.detail.value;
@@ -165,18 +160,30 @@ export default class Count_price_v1 extends LightningElement {
         this.make_new_price_book();
     }
     make_new_price_book(){
-        if(this.mix_number == '2'){
-            this.new_price_book = this.region_value+'-'+this.brand_value+' List Pricebook';
-            console.log(this.new_price_book);
+        let mix_str = "";
+        let data_list = [];
+        if(this.tsc_region_boolean == true){
+            data_list.push(this.region_value);
         }
-        if(this.mix_number == '3'){
-            this.new_price_book = this.region_value+'-'+this.brand_value+'-'+this.currency_value+' List Pricebook';
-            console.log(this.new_price_book);
+        if(this.brand_boolean == true){
+            data_list.push(this.brand_value);
         }
-        if(this.mix_number == '4'){
-            this.new_price_book = this.region_value+'-'+this.brand_value+'-'+this.currency_value+'-'+this.incoterm_value+' List Pricebook';
-            console.log(this.new_price_book);
+        if(this.currency_boolean == true){
+            data_list.push(this.currency_value);
         }
+        if(this.incoterms_boolean == true){
+            data_list.push(this.incoterm_value);
+        }
+        for(let i = 0 ;i < data_list.length;i++){
+            if(i==0){
+                mix_str=mix_str + data_list[i];
+            }
+            else{
+                mix_str =mix_str+"-"+data_list[i];
+            }            
+        }
+        mix_str = mix_str+ ' List Pricebook';
+        console.log(mix_str);
     }
     handler_incoterm(event){
         this.incoterm_value = event.detail.value;
