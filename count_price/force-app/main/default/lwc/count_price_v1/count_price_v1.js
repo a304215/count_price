@@ -16,6 +16,7 @@ export default class Count_price_v1 extends LightningElement {
     @track discount_table_value = "";
     @track region_value = "";
     @track brand_value = "";
+    @track readonly_currency = "";
     @track currency_value = "";
     @track new_price_book = "";
     @track start_date = "";
@@ -76,6 +77,7 @@ export default class Count_price_v1 extends LightningElement {
             this.currency_value = this.get_book_detail[0].CurrencyIsoCode;
             this.incoterm_value = this.get_book_detail[0].Incoterms__c;
             this.new_price_book = this.price_book_value;
+            this.readonly_currency = this.get_book_detail[0].CurrencyIsoCode;
         }
         if(error){
             console.log("there is some error in function");
@@ -133,10 +135,8 @@ export default class Count_price_v1 extends LightningElement {
         this.discount_table_value = event.detail.value;
     }  
     handler_select_region(event){
-        this.region_value = event.detail.value;
+        this.region_value = event.detail.value; 
         this.make_new_price_book();
-        console.log(this.region_value);
-        console.log(this.new_price_book);
     } 
     handler_select_brand(event){
         this.brand_value = event.detail.value;
@@ -146,6 +146,18 @@ export default class Count_price_v1 extends LightningElement {
         this.tsc_region_boolean = event.target.checked;
         this.make_new_price_book();
     }
+    checkbox_brand(event){
+        this.brand_boolean = event.target.checked;
+        this.make_new_price_book();
+    }
+    checkbox_currency(event){
+        this.currency_boolean = event.target.checked;
+        this.make_new_price_book();
+    }
+    checkbox_incoterms(event){
+        this.incoterms_boolean = event.target.checked;
+        this.make_new_price_book();
+    }
     handler_select_currency(event){
         this.currency_value = event.detail.value;
         this.make_new_price_book();
@@ -153,11 +165,6 @@ export default class Count_price_v1 extends LightningElement {
     //this handle is for button click
     handle_start_button(event){
         this.modal_keyin = true;
-    }
-    handler_mix_number(event){
-        this.mix_number = event.detail.value;
-        console.log(this.mix_number);
-        this.make_new_price_book();
     }
     make_new_price_book(){
         let mix_str = "";
@@ -183,7 +190,7 @@ export default class Count_price_v1 extends LightningElement {
             }            
         }
         mix_str = mix_str+ ' List Pricebook';
-        console.log(mix_str);
+        this.new_price_book = mix_str;
     }
     handler_incoterm(event){
         this.incoterm_value = event.detail.value;
@@ -205,10 +212,13 @@ export default class Count_price_v1 extends LightningElement {
         this.end_date = this.template.querySelector(".End_Date").value;
         this.exchange_rate = this.template.querySelector(".Exchange_Rate");
         this.discount_rate = this.template.querySelector(".Discount_Rate");
-        console.log(this.new_price_book);
         add_sys_pkey_tail({price_book:this.price_book_value})
         .then(result => {
             this.sys_pkey = result;
+            console.log(this.new_price_book);
+            if(this.end_date == ''){
+                this.end_date = "end_date_null";
+            }
             insert_new_price_book({sys_pkey:this.sys_pkey,new_price_book:this.new_price_book,tsc_region:this.region_value,start_date:this.start_date,end_date:this.end_date,set_currency:this.currency_value,brand:this.brand_value})
             .then(result =>{
                 console.log(result);
@@ -221,6 +231,5 @@ export default class Count_price_v1 extends LightningElement {
         .catch(error => {
             this.error = error;
         });
-        
     }
 }

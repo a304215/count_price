@@ -100,6 +100,30 @@
                             <lightning-input type="date" name="input1" value = {start_date} variant = "label-hidden" class="input_box Start_Date"></lightning-input>
                         </div>
                         <div class="each_row">
+                            <p class="label_text">End Date</p>
+                            <lightning-input type="date" name="input1" value = {end_date} variant = "label-hidden" class="input_box End_Date"></lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-m-around_medium column_of_row">
+                        <div class="each_row">
+                            <p class="label_text">Currency</p>
+                            <lightning-input type="text" name="input1" value = {readonly_currency}  readonly="" variant = "label-hidden" class="input_box new_currency"></lightning-input>
+                        </div>                 
+                        <div class="each_row">
+                            <p class="label_text">New Currency</p>
+                            <lightning-combobox
+                                label="test"
+                                name="Name"
+                                value={currency_value}
+                                variant = "label-hidden"
+                                class="input_box"
+                                options={get_currency}
+                                onchange={handler_select_currency}
+                            ></lightning-combobox>
+                        </div> 
+                    </div>
+                    <div class="slds-m-around_medium column_of_row">
+                        <div class="each_row">
                             <p class="label_text">*Discount Table</p>
                             <lightning-combobox
                                 label="test"
@@ -111,40 +135,10 @@
                                 class="input_box"
                             ></lightning-combobox>
                         </div>
-                    </div>
-                    <div class="slds-m-around_medium column_of_row">
-                        <div class="each_row">
-                            <p class="label_text">End Date</p>
-                            <lightning-input type="date" name="input1" value = {end_date} variant = "label-hidden" class="input_box End_Date"></lightning-input>
-                        </div>
-                        <div class="each_row">
-                            <p class="label_text">Currency</p>
-                            <lightning-combobox
-                                label="test"
-                                name="Name"
-                                value={currency_value}
-                                variant = "label-hidden"
-                                class="input_box"
-                                options={get_currency}
-                                onchange={handler_select_currency}
-                            ></lightning-combobox>
-                        </div>                 
-                    </div>
-                    <div class="slds-m-around_medium column_of_row">
-                        <div class="each_row_one">
-                            <p class="label_text">New Currency</p>
-                            <lightning-input type="text" name="input1" value = {new_currency} variant = "label-hidden" class="input_box new_currency"></lightning-input>
-                        </div>                   
-                    </div>
-                    <div class="slds-m-around_medium column_of_row">
                         <div class="each_row">
                             <p class="label_text">Exchange Rate</p>
                             <lightning-input type="text" variant = "label-hidden" class="input_box Exchange_Rate"></lightning-input>
                         </div>   
-                        <div class="each_row">
-                            <p class="label_text">Discount Rate</p>
-                            <lightning-input type="text" variant = "label-hidden" class="input_box Exchange_Rate"></lightning-input>
-                        </div>
                     </div>
                 </div>                 
                 <footer class="slds-modal__footer">
